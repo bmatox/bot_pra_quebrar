@@ -37,9 +37,53 @@ defmodule BotPraQuebrar do
           Api.create_message(msg.channel_id, erro)
       end
 
+      "!prefixo " <> prefixo ->
+      case buscar_palavras_prefixo(prefixo) do
+        {:ok, palavras} ->
+          mensagem = formatar_definicoes_palavras(palavras)
+          Api.create_message(msg.channel_id, mensagem)
+        {:error, erro} ->
+          Api.create_message(msg.channel_id, erro)
+      end
+
+      "!fipe " <> codigo_fipe ->
+      case obter_dados_veiculo(codigo_fipe) do
+        {:ok, veiculo_info} ->
+          mensagem = """
+          **DADOS DO VEÍCULO:**
+
+          **Marca**: #{veiculo_info.marca}
+          **Modelo**: #{veiculo_info.modelo}
+          **Ano Modelo**: #{veiculo_info.ano_modelo}
+          **Combustível**: #{veiculo_info.combustivel}
+          **Código FIPE**: #{veiculo_info.codigo_fipe}
+          **Mês de Referência**: #{veiculo_info.mes_referencia}
+          **Tipo de Veículo**: #{veiculo_info.tipo_veiculo}
+          **Sigla do Combustível**: #{veiculo_info.sigla_combustivel}
+          **Data da Consulta**: #{veiculo_info.data_consulta}
+          **Valor**: #{veiculo_info.valor}
+          """
+          Api.create_message(msg.channel_id, mensagem)
+        {:error, erro} ->
+          Api.create_message(msg.channel_id, erro)
+        end
+
       _ ->
         :ignore
     end
+  end
+
+  defp formatar_definicoes_palavras(palavras) do
+    palavras
+    |> Enum.take(10)
+    |> Enum.map(fn palavra ->
+      definicao = Regex.replace(~r/<.*?>/, palavra["preview"], "")
+      """
+      **Palavra**: #{palavra["word"]}
+      **Definição**: #{definicao}
+      """
+    end)
+    |> Enum.join("\n\n")
   end
 
   defp obter_endereco(cep) do
@@ -101,6 +145,42 @@ defmodule BotPraQuebrar do
         {:error, "Erro ao obter dados: #{reason}."}
     end
   end
+
+  defp buscar_palavras_prefixo(prefixo) do
+    url = "https://api.dicionario-aberto.net/prefix/#{prefixo}"
+    case HTTPoison.get(url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        {:ok, Jason.decode!(body)}
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, "Erro ao obter dados: #{reason}."}
+    end
+  end
+
+  defp obter_dados_veiculo(codigo_fipe) do
+    url = "https://brasilapi.com.br/api/fipe/preco/v1/#{codigo_fipe}"
+    case HTTPoison.get(url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        dados = Jason.decode!(body)
+        veiculo_info = Enum.at(dados, 0, %{})
+        {:ok, %{
+          valor: veiculo_info["valor"],
+          marca: veiculo_info["marca"],
+          modelo: veiculo_info["modelo"],
+          ano_modelo: veiculo_info["anoModelo"],
+          combustivel: veiculo_info["combustivel"],
+          codigo_fipe: veiculo_info["codigoFipe"],
+          mes_referencia: veiculo_info["mesReferencia"],
+          tipo_veiculo: veiculo_info["tipoVeiculo"],
+          sigla_combustivel: veiculo_info["siglaCombustivel"],
+          data_consulta: veiculo_info["dataConsulta"]
+        }}
+      {:ok, %HTTPoison.Response{status_code: status_code}} when status_code in 400..499 ->
+        {:error, "Erro ao buscar informações do veículo. Verifique o código FIPE."}
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, "Erro ao obter dados: #{reason}."}
+    end
+  end
+
 
 
 end
