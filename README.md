@@ -61,8 +61,8 @@ Um bot para Discord desenvolvido em **Elixir**, utilizando diversas APIs públic
 1. **Clone o repositório:**
 
    ```bash
-   git clone https://github.com/seu_usuario/seu_repositorio.git
-   cd seu_repositorio
+   git clone https://github.com/seu_usuario/botpraquebra.git
+   cd caminho_do_local_salvo
 2. **Instale as dependências:**
    ```bash
    mix deps.get
