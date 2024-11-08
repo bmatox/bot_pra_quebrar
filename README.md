@@ -70,31 +70,31 @@ Um bot para Discord desenvolvido em **Elixir**, utilizando diversas APIs públic
 
    Crie um arquivo config/config.exs e adicione o seguinte:
    
-```elixir
-use Mix.Config
+   ```elixir
+   use Mix.Config
 
-config :nostrum,
-  token: "SEU_TOKEN_DO_DISCORD",
-  num_shards: :auto
-`````
+   config :nostrum,
+      token: "SEU_TOKEN_DO_DISCORD",
+      num_shards: :auto
+   `````
 4. **Executando o Bot:**
 
-Inicie o bot com o comando:
+   Inicie o bot com o comando:
 
-```bash
-mix run --no-halt
-`````
+   ```bash
+   mix run --no-halt
+   `````
 
 ## Observações
 
 ### Caminho para Salvamento de Imagens:
 
-Na funcionalidade `!gerarostoIA`, a imagem é salva em um caminho específico.
+   Na funcionalidade `!gerarostoIA`, a imagem é salva em um caminho específico.
 
-Certifique-se de ajustar o `caminho_arquivo` no código para um diretório válido em seu sistema.
+   Certifique-se de ajustar o `caminho_arquivo` no código para um diretório válido em seu sistema.
 
-```elixir
-caminho_arquivo = "/seu/caminho/para/face.jpg"
-`````
+   ```elixir
+   caminho_arquivo = "/seu/caminho/para/face.jpg"
+   `````
 
 
