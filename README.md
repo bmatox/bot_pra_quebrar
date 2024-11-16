@@ -1,6 +1,6 @@
 # Bot do Discord em Elixir
 
-Um bot para Discord desenvolvido em **Elixir**, utilizando diversas APIs públicas e gratuitas para oferecer funcionalidades úteis aos usuários. Este projeto foi uma oportunidade para explorar o paradigma da programação funcional e experimentar tecnologias fora da zona de conforto do Java.
+Um bot para Discord desenvolvido em **Elixir**, utilizando diversas APIs públicas e gratuitas para oferecer funcionalidades úteis. Para mim, este projeto foi uma oportunidade para explorar o paradigma da programação funcional e experimentar tecnologias fora da zona de conforto do Java.
 
 ## Índice
 
